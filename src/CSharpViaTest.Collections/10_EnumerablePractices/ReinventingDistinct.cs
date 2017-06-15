@@ -35,6 +35,10 @@ namespace CSharpViaTest.Collections._10_EnumerablePractices
 
             public DistinctEnumerable(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
             {
+                if (source == null)
+                {
+                    throw new ArgumentNullException(nameof(source));
+                }
                 this.source = source;
                 this.comparer = comparer;
             }
@@ -64,14 +68,28 @@ namespace CSharpViaTest.Collections._10_EnumerablePractices
 
         class DistinctEnumerator<TSource> : IEnumerator<TSource>
         {
+            IEnumerator<TSource> enumerator;
+            IEqualityComparer<TSource> comparer;
+            TSource current;
+            HashSet<TSource> set;
             public DistinctEnumerator(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
             {
-                throw new NotImplementedException();
+                this.enumerator = source.GetEnumerator();
+                this.comparer = comparer;
+                set = new HashSet<TSource>(comparer);
             }
 
             public bool MoveNext()
             {
-                throw new NotImplementedException();
+                while(enumerator.MoveNext())
+                {
+                    current = enumerator.Current;
+                    if (set.Add(current))
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
 
             public void Reset()
@@ -79,13 +97,13 @@ namespace CSharpViaTest.Collections._10_EnumerablePractices
                 throw new NotImplementedException();
             }
 
-            public TSource Current { get { throw new NotImplementedException(); } }
+            public TSource Current { get { return current; } }
 
             object IEnumerator.Current => Current;
 
             public void Dispose()
             {
-                throw new NotImplementedException();
+                set = null;
             }
         }
 
