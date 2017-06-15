@@ -30,7 +30,18 @@ namespace CSharpViaTest.Collections._20_YieldPractices
 
         public IEnumerable<string> GetStringTriangle(char character, int count)
         {
-            throw new NotImplementedException();
+            for(var i = 1; i <= count; i++)
+            {
+                yield return string.Join("", GetString(character, i));
+            }
+        }
+
+        private IEnumerable<char> GetString(char character, int count)
+        {
+            for(var i = 1; i <= count; i++)
+            {
+                yield return character;
+            }
         }
 
         #endregion
